@@ -68,7 +68,7 @@ class Maze:
                 elif self.map[i][j] == 1:
                     print('⨀', end='')
                 elif self.map[i][j] == 2:
-                    print('β ', end='')
+                    print('β', end='')
                 elif self.map[i][j] == -2:
                     print('⇩', end='')
                 elif self.map[i][j] == -3:
@@ -77,28 +77,10 @@ class Maze:
                     print('⇑', end='')
                 elif self.map[i][j] == -5:
                     print('⇐', end='')
-
+                elif self.map[i][j] == -6:
+                    print('⁕', end='')
             print()
         time.sleep(0.3)
-
-    def print_path(self):
-        self.wall_maker()
-        # making route according to path Stack
-        head_i, head_j = self.height - 2, self.width - 2
-        for path in self.path.iter():
-            if path == "Down":
-                head_i -= 1
-            elif path == "Right":
-                head_j -= 1
-            elif path == "Up":
-                head_i += 1
-            elif path == "Left":
-                head_j += 1
-            self.map[head_i][head_j] = -2
-            self.print_map()
-
-        self.map[1][1] = 1  # set start point
-        self.print_map()
 
     def wall_maker(self):
         # cleaning it up
@@ -113,7 +95,6 @@ class Maze:
         if self.wall:
             for point in self.wall:
                 self.map[point[0]][point[1]] = -1
-
         self.map[1][1] = 1  # set start point
         self.map[self.height - 2][self.width - 2] = 2  # set end point
 
@@ -127,39 +108,57 @@ class Maze:
         if self.map[head_i][head_j] == 2:
             exit()
         else:
-            if self.map[head_i + 1][head_j] >= 0:
-                self.move(-2, head_i, head_j, dx=1)  # Down
             if self.map[head_i][head_j + 1] >= 0:
                 self.move(-3, head_i, head_j, dy=1)  # Right
+            if self.map[head_i + 1][head_j] >= 0:
+                self.move(-2, head_i, head_j, dx=1)  # Down
             if self.map[head_i - 1][head_j] >= 0:
                 self.move(-4, head_i, head_j, dx=-1)  # Up
             if self.map[head_i][head_j - 1] >= 0:
                 self.move(-5, head_i, head_j, dy=-1)  # Left
-
-            self.print_map()
+            # wrong way step back
             self.path.pop()
-            self.map[head_i][head_j] = 0
+            self.map[head_i][head_j] = -6  # change this for marking wrong path
+            self.print_map()
 
 
 if __name__ == '__main__':
-    print("///////////////////////////")
-    maze = Maze(10, 20)
+    # print("///////first first_maze///////")
+    # first_maze = Maze(10, 20)
+    # for i in (3, 4, 5, 6, 7, 8):
+    #     first_maze.wall.append([i, 14])
+    # for j in (9, 10, 11, 12, 13, 14):
+    #     first_maze.wall.append([3, j])
+    # first_maze.wall.append([4, 9])
+    # for i in (1, 2, 3, 4, 5, 6):
+    #     first_maze.wall.append([i, 6])
+    # for j in (6, 7, 8, 9, 10, 11):
+    #     first_maze.wall.append([6, j])
+    # first_maze.wall.append([5, 11])
+    # first_maze.wall.append([7, 5])
+    # first_maze.wall.append([2, 15])
+    #
+    # first_maze.wall_maker()
+    # first_maze.print_map()
+    # input("press any key to contain...")
+    # first_maze.path_finder()
 
-    for i in (3, 4, 5, 6, 7, 8):
-        maze.wall.append([i, 14])
-    for j in (9, 10, 11, 12, 13, 14):
-        maze.wall.append([3, j])
-    maze.wall.append([4, 9])
-    for i in (1, 2, 3, 4, 5, 6):
-        maze.wall.append([i, 6])
-    for j in (6, 7, 8, 9, 10, 11):
-        maze.wall.append([6, j])
-    maze.wall.append([5, 11])
-    maze.wall.append([7, 5])
-    maze.wall.append([2, 15])
+    print("///////second first_maze///////")
+    second_maze = Maze(8, 17)
+    for j in (13, 14, 15):
+        for i in (1, 2, 3, 4):
+            second_maze.wall.append([i, j])
+    for j in (10, 11, 12):
+        second_maze.wall.append([3, j])
+        second_maze.wall.append([4, j])
+    for j in (7, 8, 9):
+        second_maze.wall.append([2, j])
+        second_maze.wall.append([5, j])
+    for j in (4, 5, 6):
+        second_maze.wall.append([3, j])
 
-    maze.wall_maker()
-    maze.print_map()
-
+    second_maze.wall_maker()
+    second_maze.print_map()
     input("press any key to contain...")
-    maze.path_finder()
+    second_maze.path_finder()
+
