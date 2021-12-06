@@ -56,8 +56,6 @@ class Maze:
         self.width = width
         self.path = Stack()
         self.wall = []
-        self.starTime = time.time()
-        self.endTime = time.time()
 
     def print_map(self):
         os.system('Cls')
@@ -86,36 +84,32 @@ class Maze:
     def print_path(self):
         self.wall_maker()
         # making route according to path Stack
-        headi, headj = self.height - 2, self.width - 2
+        head_i, head_j = self.height - 2, self.width - 2
         for path in self.path.iter():
             if path == "Down":
-                headi -= 1
+                head_i -= 1
             elif path == "Right":
-                headj -= 1
+                head_j -= 1
             elif path == "Up":
-                headi += 1
+                head_i += 1
             elif path == "Left":
-                headj += 1
-            self.map[headi][headj] = -2
+                head_j += 1
+            self.map[head_i][head_j] = -2
             self.print_map()
 
         self.map[1][1] = 1  # set start point
         self.print_map()
-        print("Path length from point A to point B:  ", self.path.size, "  pixls")
-        self.run_time()
 
     def wall_maker(self):
-
         # cleaning it up
         self.map = [[0 for j in range(self.width)] for i in range(self.height)]
-
         # build out side walls
         for i in range(self.height):
             for j in range(self.width):
                 if i == 0 or i == self.height - 1 or j == 0 or j == self.width - 1:
                     self.map[i][j] = -1
 
-        # appending blockes to map
+        # appending blocks to map
         if self.wall:
             for point in self.wall:
                 self.map[point[0]][point[1]] = -1
@@ -123,42 +117,28 @@ class Maze:
         self.map[1][1] = 1  # set start point
         self.map[self.height - 2][self.width - 2] = 2  # set end point
 
-    def run_time(self):
-        t3 = self.endTime - self.starTime
-        milisec = ((t3 % 1) * 100) // 1
-        sec = (t3 % 60) // 1
-        mint = (t3 // 60) % 60
-        hour = (mint // 60)
-        print("Solve time is ==>", "min:", int(mint), "    s:", int(sec), "     ms:", int(milisec))
-
     def move(self, step: int, i=0, j=0, dx=0, dy=0):
         self.map[i][j] = step
         self.print_map()
         self.path.push(step)
         self.path_finder(i + dx, j + dy)
 
-    def path_finder(self, headi=1, headj=1):
-        if self.map[headi][headj] == 2:
-            print("Find it****************")
-            self.map[1][1] = 1  # set start point
-            self.print_map()
-            # self.endTime = time.time()
-            # input("press any key to contain...")
-            # self.printPath()
+    def path_finder(self, head_i=1, head_j=1):
+        if self.map[head_i][head_j] == 2:
             exit()
         else:
-            if self.map[headi + 1][headj] >= 0:
-                self.move(-2, headi, headj, dx=1)  # Down
-            if self.map[headi][headj + 1] >= 0:
-                self.move(-3, headi, headj, dy=1)  # Right
-            if self.map[headi - 1][headj] >= 0:
-                self.move(-4, headi, headj, dx=-1)  # Up
-            if self.map[headi][headj - 1] >= 0:
-                self.move(-5, headi, headj, dy=-1)  # Left
+            if self.map[head_i + 1][head_j] >= 0:
+                self.move(-2, head_i, head_j, dx=1)  # Down
+            if self.map[head_i][head_j + 1] >= 0:
+                self.move(-3, head_i, head_j, dy=1)  # Right
+            if self.map[head_i - 1][head_j] >= 0:
+                self.move(-4, head_i, head_j, dx=-1)  # Up
+            if self.map[head_i][head_j - 1] >= 0:
+                self.move(-5, head_i, head_j, dy=-1)  # Left
 
             self.print_map()
             self.path.pop()
-            self.map[headi][headj] = 0
+            self.map[head_i][head_j] = 0
 
 
 if __name__ == '__main__':
