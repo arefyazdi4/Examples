@@ -72,11 +72,11 @@ class Maze:
                 elif self.map[i][j] == -2:
                     print('⇩', end='')
                 elif self.map[i][j] == -3:
-                    print('⇒', end='')
+                    print('⇨', end='')
                 elif self.map[i][j] == -4:
-                    print('⇑', end='')
+                    print('⇫', end='')
                 elif self.map[i][j] == -5:
-                    print('⇐', end='')
+                    print('⇦', end='')
                 elif self.map[i][j] == -6:
                     print('⁕', end='')
             print()
