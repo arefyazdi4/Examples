@@ -81,5 +81,5 @@ if __name__ == '__main__':
     print(today)
     print(today.__str__())
     print(today.__repr__())  # magic tundther
-
+    Legends.__init__()
 

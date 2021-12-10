@@ -45,16 +45,16 @@ if __name__ == '__main__':
     var = tkr.StringVar()
     song_title = tkr.Label(music_player, font='Helvetica12bold', textvariable=var)
 
-    Button1 = tkr.Button(music_player, width=5, height=3, font='Helvetica12bold', text='PLAY', command=play)
-    Button2 = tkr.Button(music_player, width=5, height=3, font='Helvetica12bold', text='STOP', command=stop, )
-    Button3 = tkr.Button(music_player, width=5, height=3, font='Helvetica12bold', text='PAUSE', command=pause)
-    Button4 = tkr.Button(music_player, width=5, height=3, font='Helvetica12bold', text='UNPAUSE', command=unpause)
+    Button1 = tkr.Button(music_player, width=5, height=3, font='Helvetica12bold', text ='PLAY', command = play)
+    Button2 = tkr.Button(music_player, width=5, height=3, font='Helvetica12bold', text ='STOP', command = stop, )
+    Button3 = tkr.Button(music_player, width=5, height=3, font='Helvetica12bold', text ='PAUSE', command = pause)
+    Button4 = tkr.Button(music_player, width=5, height=3, font='Helvetica12bold', text ='UNPAUSE', command = unpause)
 
     song_title.pack()
     Button1.pack(fill='x')
     Button2.pack(fill='x')
     Button3.pack(fill='x')
     Button4.pack(fill='x')
-    play_list.pack(fill='both', expand='yes')
+    play_list.pack(fill='both', expand ='yes')
 
     music_player.mainloop()
