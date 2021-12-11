@@ -12,7 +12,7 @@ def get_items():
 
 def setup(benefit, weight, capacity):
     worth = list(enumerate(map(lambda b, w: b / w, benefit, weight)))
-    worth.sort(key=lambda worthes:worthes[1], reverse=True)
+    worth.sort(key=lambda worthes: worthes[1], reverse=True)
     total_value = 0
 
     for index, item_worth in worth:
@@ -28,8 +28,9 @@ def setup(benefit, weight, capacity):
 
 
 if __name__ == '__main__':
-    (benefits, weights) = get_items()
-    capacities = int(input("capacity of backpack"))
-
+    # (benefits, weights) = get_items()
+    # capacities = int(input("capacity of backpack"))
+    (benefits, weights) = ([5, 8, 3, 2, 7, 9, 4], [7, 8, 4, 10, 4, 6, 4])
+    capacities = 22
     print('maximum value that we can store')
     print(setup(benefits, weights, capacities))
