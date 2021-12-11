@@ -108,11 +108,11 @@ class Map:
                 print('step: ', step)
                 self.show()
         print("\n\n**********************")
-        print('rabbit catch the carrot')
+        print('rabbit reached the carrot')
         print("**********************")
 
     def show(self):
-        # os.system('Cls')
+        os.system('Cls')
         for x in range(len(self.map)):
             print(self.map[x])
         sleep(0.5)
