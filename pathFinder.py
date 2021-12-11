@@ -123,22 +123,22 @@ class Maze:
 
 
 if __name__ == '__main__':
-    # print("///////first first_maze///////")
-    # first_maze = Maze(10, 20)
-    # for i in (3, 4, 5, 6, 7, 8):
-    #     first_maze.wall.append([i, 14])
-    # for j in (9, 10, 11, 12, 13, 14):
-    #     first_maze.wall.append([3, j])
-    # first_maze.wall.append([4, 9])
-    # for i in (1, 2, 3, 4, 5, 6):
-    #     first_maze.wall.append([i, 6])
-    # for j in (6, 7, 8, 9, 10, 11):
-    #     first_maze.wall.append([6, j])
-    # first_maze.wall.append([5, 11])
-    # first_maze.wall.append([7, 5])
-    # first_maze.wall.append([2, 15])
-    #
-    # first_maze.wall_maker()
+    print("///////first first_maze///////")
+    first_maze = Maze(10, 20)
+    for i in (3, 4, 5, 6, 7, 8):
+        first_maze.wall.append([i, 14])
+    for j in (9, 10, 11, 12, 13, 14):
+        first_maze.wall.append([3, j])
+    first_maze.wall.append([4, 9])
+    for i in (1, 2, 3, 4, 5, 6):
+        first_maze.wall.append([i, 6])
+    for j in (6, 7, 8, 9, 10, 11):
+        first_maze.wall.append([6, j])
+    first_maze.wall.append([5, 11])
+    first_maze.wall.append([7, 5])
+    first_maze.wall.append([2, 15])
+
+    first_maze.wall_maker()
     # first_maze.print_map()
     # input("press any key to contain...")
     # first_maze.path_finder()
