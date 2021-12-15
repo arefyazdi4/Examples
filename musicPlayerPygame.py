@@ -27,6 +27,7 @@ class MusicPlayer:
 
 
 if __name__ == '__main__':
+
     while True:
         mode = input("enter mode: \n")
         if mode == 'p':
