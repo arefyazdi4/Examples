@@ -119,4 +119,4 @@ class Map:
 
 
 if __name__ == '__main__':
-    obj1 = Map()
+    Map()
