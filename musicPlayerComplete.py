@@ -11,7 +11,7 @@ mixer.init()
 # get list of files -> creat Music file in ur code location
 directory = askdirectory()
 os.chdir(directory)  # it permits to change the current dir
-playlist = os.listdir('./Music')  # it returns the list of files song
+playlist = os.listdir()  # it returns the list of files song
 active_playlist = playlist
 shuffled_playlist = []
 
@@ -41,7 +41,7 @@ def shuffle_playlist():
         shuffle_music = True
         shuffle(playlist)
         shuffled_playlist = playlist
-        playlist = os.listdir('./Music')
+        playlist = os.listdir()
     update_display()
 
 
@@ -80,7 +80,7 @@ def start_music():
 
     # If music is not already playing, it has not been stopped or paused then grabs next song in queue
     while not mixer.music.get_busy() and not is_stopped and not is_paused and not is_started:
-        mixer.music.load(f"./Music/{active_playlist.__getitem__(indexed_track)}")
+        mixer.music.load(f"{active_playlist.__getitem__(indexed_track)}")
         mixer.music.play()
         is_started = True
     # While music is playing check every 100 milliseconds if music track has finished playing and re-trigger music.
