@@ -41,7 +41,7 @@ class Stack:
         else:
             return None
 
-    def iter(self):
+    def __iter__(self):
         current_node = self.top
         while current_node:
             data_val = current_node.data

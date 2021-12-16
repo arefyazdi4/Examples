@@ -21,6 +21,6 @@ def my_func(*args, **kwargs):
 
 if __name__ == '__main__':
     my_func("test", "good", name="burger", price=12)
-    pass
-    # my_func = my_decorator(my_func)
+    # my_func = decorated(my_func)
     # my_func()
+

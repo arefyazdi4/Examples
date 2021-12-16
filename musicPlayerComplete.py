@@ -8,7 +8,7 @@ import os  # it permits to interact with the operating system
 window = Tk()
 mixer.init()
 
-# get list of files -> creat Music file in ur code location
+# get list of files -> creat Music file in ur code location './Music/'
 directory = askdirectory()
 os.chdir(directory)  # it permits to change the current dir
 playlist = os.listdir()  # it returns the list of files song

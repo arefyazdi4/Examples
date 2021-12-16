@@ -1,7 +1,7 @@
 #  test_main -> file name
 # in Here test_Calculator
 import unittest
-from Calculator import Calculator
+from calculatorTest import Calculator
 
 
 class TestCalculator(unittest.TestCase):
