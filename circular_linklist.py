@@ -15,7 +15,7 @@ class CircularList:
         node.next = self.head
         if self.head:
             current = self.head
-            for i in range(self.size-1):
+            for i in range(self.size - 1):
                 current = current.next
             current.next = node
         else:
@@ -30,7 +30,7 @@ class CircularList:
                 self.head = self.head.next
             if data == current.data:
                 temp = current.next
-                for j in range(self.size-1):
+                for j in range(self.size - 1):
                     current = current.next
                 current.next = temp
                 self.size -= 1
@@ -41,11 +41,17 @@ class CircularList:
         if cheek_remove:
             print("data not found")
 
-    def generate(self):
+    def __iter__(self):
         current = self.head
         for i in range(self.size):
             yield current.data
             current = current.next
+
+    def __index__(self, index):
+        current = self.head
+        for i in range(index):
+            current = current.next
+        return current.data
 
 
 if __name__ == '__main__':
@@ -59,23 +65,25 @@ if __name__ == '__main__':
     num.append(6)
     num.append(7)
 
+    print(num.__index__(3))
+
     print("hole data")
-    for i in num.generate():
+    for i in num:
         print(i)
 
     print("remove first node")
     num.delete(1)
-    for i in num.generate():
+    for i in num:
         print(i)
 
     print("remove node in the middle")
     num.delete(4)
-    for i in num.generate():
+    for i in num:
         print(i)
 
     print("remove last node")
     num.delete(7)
-    for i in num.generate():
+    for i in num:
         print(i)
 
     print("in case dataa doesn't exist")

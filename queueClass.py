@@ -21,10 +21,10 @@ class ListQueue:
 
 
 class Node:
-    def __init__(self, data, nextData=None, prevData=None):
+    def __init__(self, data, next_data=None, prev_data=None):
         self.data = data
-        self.next = nextData
-        self.prev = prevData
+        self.next = next_data
+        self.prev = prev_data
 
 
 class Queue:
@@ -34,14 +34,14 @@ class Queue:
         self.size = 0
 
     def enqueue(self, data):
-        newNode = Node(data)
+        new_dode = Node(data)
         if self.head:
-            newNode.prev = self.tail
-            self.tail.next = newNode
-            self.tail = newNode
+            new_dode.prev = self.tail
+            self.tail.next = new_dode
+            self.tail = new_dode
         else:
-            self.head = newNode
-            self.tail = newNode
+            self.head = new_dode
+            self.tail = new_dode
         self.size += 1
 
     def dequeue(self):
@@ -53,6 +53,24 @@ class Queue:
                 self.head = None
                 self.tail = None
             self.size -= 0
+
+    def next(self):
+        node = self.head
+        self.dequeue()
+        self.enqueue(node.data)
+        return node.data
+
+    def __iter__(self):
+        current = self.head
+        for i in range(self.size):
+            yield current.data
+            current = current.next
+
+    def __getitem__(self, item):
+        current = self.head
+        for _ in range(item):
+            current = current.next
+        return current.data
 
 
 if __name__ == '__main__':
