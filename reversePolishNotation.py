@@ -1,7 +1,7 @@
 from stackClass import Stack
 
 
-class ReversePolishNotation:
+class Rpn:
     @staticmethod
     def operator_applier(operator, *args):
         if operator == '+':
@@ -19,27 +19,27 @@ class ReversePolishNotation:
             for num in args[1:]:
                 result = result - num
             return result
-        elif operator == '*':
+        elif operator == '/':
             result = args[0]
             for num in args[1:]:
                 result = result / num
             return result
 
     @staticmethod
-    def rpn(arithmetic_expression: Stack):
-        first_node = arithmetic_expression.pop()
-        if first_node in ('+', '*', '-', '/'):
-            second_node = ReversePolishNotation.rpn(arithmetic_expression)
-            third_node = ReversePolishNotation.rpn(arithmetic_expression)
-            return ReversePolishNotation.operator_applier(first_node, third_node, second_node)
+    def reverse_p_notation(arithmetic_expression: Stack):
+        root_node = arithmetic_expression.pop()
+        if root_node in ('+', '*', '-', '/'):
+            right_node = Rpn.reverse_p_notation(arithmetic_expression)
+            left_node = Rpn.reverse_p_notation(arithmetic_expression)
+            return Rpn.operator_applier(root_node, left_node, right_node)
         else:
-            return int(first_node)
+            return int(root_node)
 
 
 if __name__ == '__main__':
-    statements = '54+53-*'
-    expression = Stack()
-    for statement in statements:
-        expression.push(statement)
+    statements_list = '5 4 + 5 3 - *'.split()
+    statements_stack = Stack()
+    for statement in statements_list:
+        statements_stack.push(statement)
 
-    print(ReversePolishNotation.rpn(expression))
+    print(Rpn.reverse_p_notation(statements_stack))
