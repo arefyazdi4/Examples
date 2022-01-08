@@ -1,3 +1,106 @@
+class Node:
+    def __init__(self, data, next_data=None, prev_data=None):
+        self.data = data
+        self.next = next_data
+        self.prev = prev_data
+
+
+class Queue:
+    def __init__(self):
+        self.head = None
+        self.tail = None
+        self.size = 0
+
+    def enqueue(self, data):
+        new_dode = Node(data)
+        if self.head:
+            new_dode.prev = self.tail
+            self.tail.next = new_dode
+            self.tail = new_dode
+        else:
+            self.head = new_dode
+            self.tail = new_dode
+        self.size += 1
+
+    def dequeue(self):
+        if self.head:
+            data = self.head.data
+            if self.head.next:
+                self.head = self.head.next
+                self.head.prev = Node
+            else:
+                self.head = None
+                self.tail = None
+            self.size -= 1
+            return data
+        else:
+            return None
+
+    def next(self):
+        node = self.head
+        self.dequeue()
+        self.enqueue(node.data)
+        return node.data
+
+    def __iter__(self):
+        current = self.head
+        for i in range(self.size):
+            yield current.data
+            current = current.next
+
+    def __getitem__(self, item):
+        current = self.head
+        for _ in range(item):
+            current = current.next
+        return current.data
+
+    def __len__(self):
+        return self.size
+
+
+class NodeBfs:
+    def __init__(self, node_num, distance=None, predecessor=None, color='white'):
+        self.node_num = node_num
+        self.distance = distance
+        self.predecessor: NodeBfs = predecessor
+        self.color = color
+        self.adj: list[NodeBfs] = list()
+
+
+class GraphBfs:
+    def __init__(self, raw_graph):
+        self.raw_graph = raw_graph
+        self.graph_list_bfs: list[NodeBfs] = list()
+        self.set_graph_list()
+
+    def set_graph_list(self):
+        list_adjacency: list = self.raw_graph.list_adjacency
+        for node in list_adjacency:
+            new_node = NodeBfs(node[0])
+            self.graph_list_bfs.append(new_node)
+
+        for node in self.graph_list_bfs:
+            node_edges = list_adjacency[node.node_num - 1][1]
+            for connected_node in node_edges:
+                node.adj.append(self[connected_node])
+
+    @staticmethod
+    def get_path(end_node: NodeBfs):
+        path = list()
+        current_node = end_node
+        while current_node:
+            path.append(current_node.node_num)
+            current_node = current_node.predecessor
+        path.reverse()
+        return path
+
+    def __getitem__(self, item):
+        for node in self.graph_list_bfs:
+            if node.node_num == item:
+                return node
+        return None
+
+
 class Graphs:
     def __init__(self, edge_list_raw: list):
         self.edge_list_raw = edge_list_raw
@@ -27,6 +130,31 @@ class Graphs:
             end_node = edges[1] - 1
             self.matrix_adjacency[start_node][end_node] = 1
 
+    def bts(self, start_node, end_node):
+        graph_db = GraphBfs(self)
+
+        start_node: NodeBfs = graph_db[start_node]
+        end_node: NodeBfs = graph_db[end_node]
+
+        start_node.color = 'gray'
+        start_node.distance = 0
+
+        travel_node_queue = Queue()
+        travel_node_queue.enqueue(start_node)
+
+        while len(travel_node_queue):
+            if end_node.predecessor:
+                break
+            parent_node: NodeBfs = travel_node_queue.dequeue()
+            for current_node in parent_node.adj:
+                if current_node.color == 'white':
+                    current_node.color = 'gray'
+                    current_node.distance = parent_node.distance + 1
+                    current_node.predecessor = parent_node
+                    travel_node_queue.enqueue(current_node)
+            parent_node.color = 'black'
+        return graph_db
+
 
 def read_edges_file(file_name):
     edge_file_name = open(file_name, 'r')
@@ -39,16 +167,33 @@ def read_edges_file(file_name):
 
 if __name__ == '__main__':
     print('*****first Graph')
-    edges_list_raw = read_edges_file('edges_list.txt')
+    edges_list_raw = read_edges_file('edge_list_demo.txt')
     first_graph = Graphs(edges_list_raw)
 
-    # print('**** vertic *****')
-    # print(first_graph.vertices)
-    # print('**** node num *****')
-    # print(first_graph.node_number)
-    # print('**** edge num *****')
-    # print(first_graph.edge_number)
-    # print('**** list adj ****')
-    # print(first_graph.list_adjacency)
+    print('**** vertices *****')
+    print(first_graph.vertices)
+
+    print('**** node num *****')
+    print(first_graph.node_number)
+
+    print('**** edge num *****')
+    print(first_graph.edge_number)
+
+    print('**** list adj ****')
+    print(first_graph.list_adjacency)
+
     print('**** matrix adj ****')
     print(first_graph.matrix_adjacency)
+
+    print('**** Bfs ****')
+    bfs_graph_list = first_graph.bts(6, 10)
+    print(bfs_graph_list[6].distance)
+    print(bfs_graph_list[2].distance)
+    print(bfs_graph_list[7].distance)
+    print(bfs_graph_list[8].distance)
+    print(bfs_graph_list[9].distance)
+    print(bfs_graph_list[10].distance)
+
+    print('***path***')
+    print(GraphBfs.get_path(bfs_graph_list[9]))
+    print(GraphBfs.get_path(bfs_graph_list[10]))

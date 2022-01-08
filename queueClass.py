@@ -46,13 +46,17 @@ class Queue:
 
     def dequeue(self):
         if self.head:
+            data = self.head.data
             if self.head.next:
                 self.head = self.head.next
                 self.head.prev = Node
             else:
                 self.head = None
                 self.tail = None
-            self.size -= 0
+            self.size -= 1
+            return data
+        else:
+            return None
 
     def next(self):
         node = self.head
