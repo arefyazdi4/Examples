@@ -84,6 +84,26 @@ class GraphBfs:
             for connected_node in node_edges:
                 node.adj.append(self[connected_node])
 
+    def find_max_connected_node(self):
+        max_connected_node = self.graph_list_bfs[0]
+        for node in self.graph_list_bfs:
+            if node.adj.__len__() > max_connected_node.adj.__len__():
+                max_connected_node = node
+        return max_connected_node
+
+    # def find_max_connected_node(self):
+    #     max_connected_node = self.graph_list_bfs[0]
+    #     for node in self.graph_list_bfs:
+    #         if node.adj.__len__() > max_connected_node.adj.__len__():
+    #             max_connected_node = node
+    #     return max_connected_node
+
+    def __getitem__(self, item):
+        for node in self.graph_list_bfs:
+            if node.node_num == item:
+                return node
+        return None
+
     @staticmethod
     def get_path(end_node: NodeBfs):
         path = list()
@@ -93,12 +113,6 @@ class GraphBfs:
             current_node = current_node.predecessor
         path.reverse()
         return path
-
-    def __getitem__(self, item):
-        for node in self.graph_list_bfs:
-            if node.node_num == item:
-                return node
-        return None
 
 
 class Graphs:
@@ -180,20 +194,22 @@ if __name__ == '__main__':
     print(first_graph.edge_number)
 
     print('**** list adj ****')
-    print(first_graph.list_adjacency)
+    for vertices in first_graph.list_adjacency:
+        print(vertices)
 
     print('**** matrix adj ****')
-    print(first_graph.matrix_adjacency)
+    for vertices in first_graph.matrix_adjacency:
+        print(vertices)
 
     print('**** Bfs ****')
     bfs_graph_list = first_graph.bts(6, 10)
-    print(bfs_graph_list[6].distance)
-    print(bfs_graph_list[2].distance)
-    print(bfs_graph_list[7].distance)
-    print(bfs_graph_list[8].distance)
-    print(bfs_graph_list[9].distance)
-    print(bfs_graph_list[10].distance)
+    print(6, bfs_graph_list[6].distance)
+    print(2, bfs_graph_list[2].distance)
+    print(7, bfs_graph_list[7].distance)
+    print(8, bfs_graph_list[8].distance)
+    print(9, bfs_graph_list[9].distance)
+    print(10, bfs_graph_list[10].distance)
 
     print('***path***')
-    print(GraphBfs.get_path(bfs_graph_list[9]))
-    print(GraphBfs.get_path(bfs_graph_list[10]))
+    print(9, GraphBfs.get_path(bfs_graph_list[9]))
+    print(10, GraphBfs.get_path(bfs_graph_list[10]))
