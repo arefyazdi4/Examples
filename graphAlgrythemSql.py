@@ -32,19 +32,16 @@ class NodeDataBase:
         self.conn = sqlite3.connect("NODE_DATABASE")
         self.cur = self.conn.cursor()
         self.cur.execute("""CREATE TABLE IF NOT EXISTS nodes(
-                            node_num INTEGER PRIMARY,
-                            color TEXT,
-                            distance INTEGER,
+                            node_num INTEGER PRIMARY KEY ,
+                            color MESSAGE_TEXT ,
+                            distance INTEGER ,
                             parent INTEGER
                             )""")
         self.conn.commit()
 
     def insert_data(self, node, color='white', distance=0, parent=0):
-        try:
-            self.cur.execute("INSERT INTO codes VALUES (?, ?, ?, ?)", (node, color, distance, parent))
-            self.conn.commit()
-        except:
-            print("something went wrong")
+        self.cur.execute("INSERT INTO nodes VALUES (?, ?, ?, ?)", (node, color, distance, parent))
+        self.conn.commit()
 
     def update_data(self, node, color, distance, parent):
         self.remove_data(node)
@@ -70,15 +67,14 @@ class NodeDataBase:
         for node in list_nodes:
             self.insert_data(node)
 
-    # @staticmethod
-    # def get_path(end_node: NodeBfs):
-    #     path = list()
-    #     current_node = end_node
-    #     while current_node:
-    #         path.append(current_node.node_num)
-    #         current_node = current_node.predecessor
-    #     path.reverse()
-    #     return path
+    def get_path(self, end_node):
+        try:
+            current_node = self.pop_data(end_node)
+            while current_node:
+                print(current_node[0])
+                current_node = self.pop_data(current_node[3])
+        finally:
+            pass
 
 
 class Graphs:
@@ -169,5 +165,4 @@ if __name__ == '__main__':
     print(bfs_graph_list.pop_data(9)[2])
     print(bfs_graph_list.pop_data(10)[2])
     print('***path***')
-    # print(GraphBfs.get_path(bfs_graph_list[9]))
-    # print(GraphBfs.get_path(bfs_graph_list[10]))
+    print(bfs_graph_list.get_path(9))
