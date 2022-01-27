@@ -175,7 +175,7 @@ def read_edges_file(file_name):
     edges_list = list()
     for data in edge_file_name:
         node_num = data.split()
-        edges_list.append((int(node_num[0]), int(node_num[1])))  # index 0 & index 1 -> tuple edge from node1 to node2
+        edges_list.append(tuple(map(int, data.split())))  # index 0 & index 1 -> tuple edge from node1 to node2
     return edges_list
 
 
