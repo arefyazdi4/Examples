@@ -105,8 +105,8 @@ class GraphBfsDatabase:
     def get_path(end_node: NodeBfs):
         path = list()
         current_node = end_node
-        while current_node:
-            path.append(current_node.node_num)
+        while current_node.predecessor:
+            path.append((current_node.predecessor.node_num, current_node.node_num))
             current_node = current_node.predecessor
         path.reverse()
         return path
@@ -143,16 +143,7 @@ class GraphDirected:
             self.user_interface_graph.add_edge(s_node, e_node)
 
     def show_user_interface_graph(self):
-        # pos = nx.spring_layout(self.user_interface_graph, seed=3113794652)  # positions for all nodes
         nx.draw(self.user_interface_graph, with_labels=True, font_weight='bold')
-        # nx.draw_networkx_edges(
-        #     self.user_interface_graph,
-        #     pos,
-        #     edgelist=[(10, 11), (10, 2)],
-        #     width=8,
-        #     alpha=0.5,
-        #     edge_color="tab:red",
-        # )
         plt.show()
 
     def set_matrix_adjacency_user_interface(self):
@@ -192,21 +183,89 @@ class GraphDirected:
             parent_node.color = 'black'
         return graph_db
 
-    def show_bts_user_interface(self):
+    def show_bts_user_interface(self, path):
+        pos = nx.spring_layout(self.user_interface_graph, seed=3113794652)  # positions for all nodes
+        nx.draw(self.user_interface_graph, pos, with_labels=True, font_weight='bold')
+        nx.draw_networkx_edges(
+            self.user_interface_graph,
+            pos,
+            edgelist=path,
+            width=8,
+            alpha=0.5,
+            edge_color="tab:red",
+        )
+        plt.show()
+
+
+class ShortestPath:
+    def __init__(self, edge_list_raw: list):
+        self.edges_list_raw: list = edge_list_raw
+        self.vertices = set()
+        self.set_vertices()
+        self.list_adjacency = dict()
+        self.set_list_adjacency()
+        self.passed_edges = list()
+        self.color = {node: 'white' for node in self.vertices}
+        self.dijkstra()
+        self.user_interface_undirected_graph = nx.DiGraph()  # using network
+        self.set_user_interface_graph()
+        self.show_dijkstra_user_interface()
+
+    def set_vertices(self):
+        for edges in self.edges_list_raw:
+            for node in edges:
+                self.vertices.add(node)
+
+    def set_list_adjacency(self):
+        for node in self.vertices:
+            connected_nodes = [ver[1] for ver in list(filter(lambda v: v[0] == node, self.edges_list_raw))]
+            connected_nodes_rev = [ver[0] for ver in list(filter(lambda v: v[1] == node, self.edges_list_raw))]
+            connected_nodes.extend(connected_nodes_rev)
+            self.list_adjacency[node] = connected_nodes
+
+    def dijkstra(self):
+        self.color[1] = 'gray'
+        travel_node_queue = list()
+        travel_node_queue.append(1)
+
+        while len(travel_node_queue):
+            parent_nodes = travel_node_queue.pop(0)
+            for current_node in self.list_adjacency[parent_nodes]:
+                if self.color[current_node] == 'white':
+                    self.color[current_node] = 'gray'
+                    travel_node_queue.append(current_node)
+                    self.passed_edges.append((parent_nodes, current_node))
+            self.color[parent_nodes] = 'black'
+
+    def set_user_interface_graph(self):
+        for node in self.vertices:
+            self.user_interface_undirected_graph.add_node(node)
+
+    def show_dijkstra_user_interface(self):
+        pos = nx.spring_layout(self.user_interface_undirected_graph, seed=3113794652)  # positions for all nodes
+        nx.draw(self.user_interface_undirected_graph, pos, with_labels=True, font_weight='bold')
+        nx.draw_networkx_edges(
+            self.user_interface_undirected_graph,
+            pos,
+            edgelist=self.passed_edges,
+            width=8,
+            alpha=0.5,
+            edge_color="tab:red",
+        )
+        plt.show()
 
 
 def read_edges_file(file_name):
     edge_file_name = open(file_name, 'r')
     edges_list = list()
     for data in edge_file_name:
-        node_num = data.split()
         edges_list.append(tuple(map(int, data.split())))  # index 0 & index 1 -> tuple edge from node1 to node2
     return edges_list
 
 
 if __name__ == '__main__':
     print('*****demo Graph******')
-    edges_list_raw = read_edges_file('edges_list.txt')
+    edges_list_raw = read_edges_file('edges_list_demo.txt')
     print(edges_list_raw)
     demo_graph_directed = GraphDirected(edges_list_raw)
 
@@ -243,3 +302,9 @@ if __name__ == '__main__':
     print('***path***')
     print(9, GraphBfsDatabase.get_path(demo_graph_bfs_db[9]))
     print(10, GraphBfsDatabase.get_path(demo_graph_bfs_db[10]))
+
+    print('***path UI graph***')
+    demo_graph_directed.show_bts_user_interface(GraphBfsDatabase.get_path(demo_graph_bfs_db[9]))
+
+    print(' **** dijkstra ******')
+    ShortestPath(edges_list_raw)
