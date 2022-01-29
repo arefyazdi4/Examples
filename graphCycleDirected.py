@@ -1,3 +1,7 @@
+import networkx as nx
+import matplotlib.pyplot as plt
+
+
 class Node:
     def __init__(self, data, next_data=None, prev_data=None):
         self.data = data
@@ -67,7 +71,7 @@ class NodeBfs:
         self.adj: list[NodeBfs] = list()
 
 
-class GraphBfs:
+class GraphBfsDatabase:
     def __init__(self, raw_graph):
         self.raw_graph = raw_graph
         self.graph_list_bfs: list[NodeBfs] = list()
@@ -91,13 +95,6 @@ class GraphBfs:
                 max_connected_node = node
         return max_connected_node
 
-    # def find_max_connected_node(self):
-    #     max_connected_node = self.graph_list_bfs[0]
-    #     for node in self.graph_list_bfs:
-    #         if node.adj.__len__() > max_connected_node.adj.__len__():
-    #             max_connected_node = node
-    #     return max_connected_node
-
     def __getitem__(self, item):
         for node in self.graph_list_bfs:
             if node.node_num == item:
@@ -115,7 +112,7 @@ class GraphBfs:
         return path
 
 
-class Graphs:
+class GraphDirected:
     def __init__(self, edge_list_raw: list):
         self.edge_list_raw = edge_list_raw
         self.vertices = set()
@@ -125,7 +122,9 @@ class Graphs:
         self.list_adjacency = list()
         self.set_list_adjacency()
         self.matrix_adjacency = list()
-        self.set_matrix_adjacency()
+        self.set_matrix_adjacency_user_interface()
+        self.user_interface_graph = nx.DiGraph()  # using network
+        self.set_user_interface_graph()
 
     def set_vertices(self):
         for edges in self.edge_list_raw:
@@ -137,15 +136,39 @@ class Graphs:
             connected_nodes = [ver[1] for ver in list(filter(lambda v: v[0] == node, self.edge_list_raw))]
             self.list_adjacency.append((node, connected_nodes))
 
-    def set_matrix_adjacency(self):
+    def set_user_interface_graph(self):
+        for node in self.vertices:
+            self.user_interface_graph.add_node(node)
+        for s_node, e_node, weight in self.edge_list_raw:
+            self.user_interface_graph.add_edge(s_node, e_node)
+
+    def show_user_interface_graph(self):
+        # pos = nx.spring_layout(self.user_interface_graph, seed=3113794652)  # positions for all nodes
+        nx.draw(self.user_interface_graph, with_labels=True, font_weight='bold')
+        # nx.draw_networkx_edges(
+        #     self.user_interface_graph,
+        #     pos,
+        #     edgelist=[(10, 11), (10, 2)],
+        #     width=8,
+        #     alpha=0.5,
+        #     edge_color="tab:red",
+        # )
+        plt.show()
+
+    def set_matrix_adjacency_user_interface(self):
         self.matrix_adjacency = [[0 for j in range(self.node_number)] for i in range(self.node_number)]
         for edges in self.edge_list_raw:
             start_node = edges[0] - 1
             end_node = edges[1] - 1
             self.matrix_adjacency[start_node][end_node] = 1
 
+    def show_matrix_adjacency(self):
+        plt.ion()
+        plt.imshow(self.matrix_adjacency, interpolation='none', origin='lower')
+        plt.show()
+
     def bts(self, start_node, end_node):
-        graph_db = GraphBfs(self)
+        graph_db = GraphBfsDatabase(self)
 
         start_node: NodeBfs = graph_db[start_node]
         end_node: NodeBfs = graph_db[end_node]
@@ -169,6 +192,8 @@ class Graphs:
             parent_node.color = 'black'
         return graph_db
 
+    def show_bts_user_interface(self):
+
 
 def read_edges_file(file_name):
     edge_file_name = open(file_name, 'r')
@@ -180,36 +205,41 @@ def read_edges_file(file_name):
 
 
 if __name__ == '__main__':
-    print('*****first Graph')
-    edges_list_raw = read_edges_file('edge_list_demo.txt')
-    first_graph = Graphs(edges_list_raw)
+    print('*****demo Graph******')
+    edges_list_raw = read_edges_file('edges_list.txt')
+    print(edges_list_raw)
+    demo_graph_directed = GraphDirected(edges_list_raw)
+
+    print('***** UI graph *****')
+    demo_graph_directed.show_user_interface_graph()
 
     print('**** vertices *****')
-    print(first_graph.vertices)
+    print(demo_graph_directed.vertices)
 
     print('**** node num *****')
-    print(first_graph.node_number)
+    print(demo_graph_directed.node_number)
 
     print('**** edge num *****')
-    print(first_graph.edge_number)
+    print(demo_graph_directed.edge_number)
 
     print('**** list adj ****')
-    for vertices in first_graph.list_adjacency:
+    for vertices in demo_graph_directed.list_adjacency:
         print(vertices)
 
     print('**** matrix adj ****')
-    for vertices in first_graph.matrix_adjacency:
+    for vertices in demo_graph_directed.matrix_adjacency:
         print(vertices)
+    demo_graph_directed.show_matrix_adjacency()
 
     print('**** Bfs ****')
-    bfs_graph_list = first_graph.bts(6, 10)
-    print(6, bfs_graph_list[6].distance)
-    print(2, bfs_graph_list[2].distance)
-    print(7, bfs_graph_list[7].distance)
-    print(8, bfs_graph_list[8].distance)
-    print(9, bfs_graph_list[9].distance)
-    print(10, bfs_graph_list[10].distance)
+    demo_graph_bfs_db = demo_graph_directed.bts(6, 10)
+    print(6, demo_graph_bfs_db[6].distance)
+    print(2, demo_graph_bfs_db[2].distance)
+    print(7, demo_graph_bfs_db[7].distance)
+    print(8, demo_graph_bfs_db[8].distance)
+    print(9, demo_graph_bfs_db[9].distance)
+    print(10, demo_graph_bfs_db[10].distance)
 
     print('***path***')
-    print(9, GraphBfs.get_path(bfs_graph_list[9]))
-    print(10, GraphBfs.get_path(bfs_graph_list[10]))
+    print(9, GraphBfsDatabase.get_path(demo_graph_bfs_db[9]))
+    print(10, GraphBfsDatabase.get_path(demo_graph_bfs_db[10]))
