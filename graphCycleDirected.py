@@ -62,68 +62,68 @@ class Queue:
         return self.size
 
 
-class NodeBfs:
-    def __init__(self, node_num, distance=None, predecessor=None, color='white'):
-        self.node_num = node_num
-        self.distance = distance
-        self.predecessor: NodeBfs = predecessor
-        self.color = color
-        self.adj: list[NodeBfs] = list()
+class NodeBfs:  # data model class created for bft algorithm
+    def __init__(self, node_num, distance=float('inf'), predecessor=None, color='white'):
+        self.node_num = node_num  # node name
+        self.distance = distance  # distance from stat node
+        self.predecessor: NodeBfs = predecessor  # base node that got driven from
+        self.color = color  # visit state white: non visited , gray: visited once, black: completely visited
+        self.adj: list[NodeBfs] = list()  # adjacency list for each node contain list of obj from class NodeBfs
 
 
-class GraphBfsDatabase:
+class GraphBfsDatabase:  # memento class made NodeBfs data model class it contain funcs to creat Database made of model
     def __init__(self, raw_graph):
-        self.raw_graph = raw_graph
-        self.graph_list_bfs: list[NodeBfs] = list()
-        self.set_graph_list()
+        self.raw_graph = raw_graph  # graph object to be reselected and be used as it needed
+        self.graph_list_bfs: list[NodeBfs] = list()  # database to store nodeBfs
+        self.set_graph_list()  # function to made graph database from edges list
 
-    def set_graph_list(self):
-        list_adjacency: list = self.raw_graph.list_adjacency
+    def set_graph_list(self):  # function to made graph database from edges list
+        list_adjacency: list = self.raw_graph.list_adjacency   # make list for all the edges of graph
         for node in list_adjacency:
-            new_node = NodeBfs(node[0])
+            new_node = NodeBfs(node[0])   # make nodeBfs object for each node in node list
             self.graph_list_bfs.append(new_node)
 
         for node in self.graph_list_bfs:
-            node_edges = list_adjacency[node.node_num - 1][1]
+            node_edges = list_adjacency[node.node_num - 1][1]  # selecting ending node from edge where start with node
             for connected_node in node_edges:
                 node.adj.append(self[connected_node])
 
-    def find_max_connected_node(self):
+    def find_max_connected_node(self):  # fine node that contain biggest number of edges connected to it
         max_connected_node = self.graph_list_bfs[0]
         for node in self.graph_list_bfs:
             if node.adj.__len__() > max_connected_node.adj.__len__():
                 max_connected_node = node
         return max_connected_node
 
-    def __getitem__(self, item):
+    def __getitem__(self, item):  # getting node num and return it's object from nodeBfs Database
         for node in self.graph_list_bfs:
             if node.node_num == item:
                 return node
         return None
 
     @staticmethod
-    def get_path(end_node: NodeBfs):
+    def get_path(end_node: NodeBfs):  # this function get an end point node and return sequence of it's parents
         path = list()
         current_node = end_node
         while current_node.predecessor:
             path.append((current_node.predecessor.node_num, current_node.node_num))
             current_node = current_node.predecessor
-        path.reverse()
+        path.reverse()   # to get order from start point to end one
         return path
 
 
-class GraphDirected:
+class GraphDirected:  # main class to creat graph from edge list and futures to store , find path and visualise
     def __init__(self, edge_list_raw: list):
-        self.edge_list_raw = edge_list_raw
-        self.vertices = set()
-        self.set_vertices()
-        self.node_number = self.vertices.__len__()
-        self.edge_number = self.edge_list_raw.__len__()
+        self.edge_list_raw = edge_list_raw  # primary edge file
+        self.vertices = set()  # set data structure to store nodes num and prevent redundancy
+        self.set_vertices()  # function to set graph nodes from raw edge list
+        self.node_number = self.vertices.__len__()  # to store number of nodes
+        self.edge_number = self.edge_list_raw.__len__()  # store number of edges
         self.list_adjacency = list()
         self.set_list_adjacency()
         self.matrix_adjacency = list()
-        self.set_matrix_adjacency_user_interface()
-        self.user_interface_graph = nx.DiGraph()  # using network
+        self.set_matrix_adjacency_user_interface()  # creating a visual effect to show adjacency
+        self.user_interface_graph = nx.DiGraph()  # using network module to creat visual effect for graph
         self.set_user_interface_graph()
 
     def set_vertices(self):
@@ -233,7 +233,7 @@ class ShortestPath:
         distance[start_node] = 0
         temp_queue.append((start_node, distance[start_node]))
 
-        while temp_queue.__len__() != 0:
+        while len(temp_queue):
             parent_node, min_dis_parent_node = min(temp_queue, key=lambda v: v[1])
             temp_queue.remove((parent_node, min_dis_parent_node))
             visited_node[parent_node] = True
