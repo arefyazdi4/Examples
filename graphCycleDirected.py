@@ -205,8 +205,7 @@ class ShortestPath:
         self.list_adjacency = dict()
         self.set_list_adjacency()
         self.passed_edges = list()
-        self.color = {node: 'white' for node in self.vertices}
-        self.dijkstra()
+        self.set_passed_edges(self.dijkstra())
         self.user_interface_undirected_graph = nx.DiGraph()  # using network
         self.set_user_interface_graph()
         self.show_dijkstra_user_interface()
@@ -218,24 +217,40 @@ class ShortestPath:
 
     def set_list_adjacency(self):
         for node in self.vertices:
-            connected_nodes = [ver[1] for ver in list(filter(lambda v: v[0] == node, self.edges_list_raw))]
-            connected_nodes_rev = [ver[0] for ver in list(filter(lambda v: v[1] == node, self.edges_list_raw))]
-            connected_nodes.extend(connected_nodes_rev)
-            self.list_adjacency[node] = connected_nodes
+            connected_nodes = set()
+            for ver in list(filter(lambda v: v[0] == node, self.edges_list_raw)):
+                connected_nodes.add((ver[1], ver[2]))
+            for ver in list(filter(lambda v: v[1] == node, self.edges_list_raw)):
+                connected_nodes.add((ver[0], ver[2]))
+            self.list_adjacency[node] = list(connected_nodes)
 
-    def dijkstra(self):
-        self.color[1] = 'gray'
-        travel_node_queue = list()
-        travel_node_queue.append(1)
+    def dijkstra(self, start_node=1):
+        visited_node = {node: False for node in self.vertices}
+        distance = {node: float('inf') for node in self.vertices}
+        parent = {node: None for node in self.vertices}
+        temp_queue = list()
 
-        while len(travel_node_queue):
-            parent_nodes = travel_node_queue.pop(0)
-            for current_node in self.list_adjacency[parent_nodes]:
-                if self.color[current_node] == 'white':
-                    self.color[current_node] = 'gray'
-                    travel_node_queue.append(current_node)
-                    self.passed_edges.append((parent_nodes, current_node))
-            self.color[parent_nodes] = 'black'
+        distance[start_node] = 0
+        temp_queue.append((start_node, distance[start_node]))
+
+        while temp_queue.__len__() != 0:
+            parent_node, min_dis_parent_node = min(temp_queue, key=lambda v: v[1])
+            temp_queue.remove((parent_node, min_dis_parent_node))
+            visited_node[parent_node] = True
+
+            for current_node, weight in self.list_adjacency.get(parent_node):
+                if not visited_node[current_node]:
+                    new_distance = distance[parent_node] + weight
+                    if new_distance < distance[current_node]:
+                        distance[current_node] = new_distance
+                        temp_queue.append((current_node, distance[current_node]))
+                        parent[current_node] = parent_node
+        return parent
+
+    def set_passed_edges(self, parent_list):
+        for node in self.vertices:
+            if parent_list[node]:
+                self.passed_edges.append((node, parent_list[node]))
 
     def set_user_interface_graph(self):
         for node in self.vertices:
