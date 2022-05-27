@@ -63,16 +63,16 @@ def defs(player: list):
 
 
 def fwds(player: list):
-    final_score = 0
-    name = player[0]
-    position = player[1]
-    minutes_played = int(player[2])
-    number_of_goals = int(player[3])
-    number_of_assists = int(player[4])
-    number_of_penalty_misses = int(player[5])
-    number_of_yellow_cards = int(player[6])
-    number_of_red_cards = int(player[7])
-    number_of_own_goals = int(player[8])
+    (final_score,
+     name,
+     position,
+     minutes_played,
+     number_of_goals,
+     number_of_assists,
+     number_of_penalty_misses,
+     number_of_yellow_cards,
+     number_of_red_cards,
+     number_of_own_goals,) = player
     if position != 'FWD':
         return 'Error For Forward Player'
     if minutes_played < 60:

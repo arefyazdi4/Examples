@@ -66,7 +66,7 @@ def read_edges_file(file_name):
 
 if __name__ == '__main__':
     print('*****first Graph')
-    edges_list_raw = read_edges_file('edge_list_demo.txt')
+    edges_list_raw = read_edges_file('edges_list_demo.txt')
     first_graph = Graphs(edges_list_raw)
 
     print('**** vertices *****')

@@ -23,7 +23,7 @@ class ListQueue:
         return self.item.__getitem__(item)
 
     def __len__(self):
-        return self.item.__len__()
+        return self.size
 
 
 # DataBase Functional class
@@ -131,7 +131,7 @@ class Graphs:
 
 if __name__ == '__main__':
 
-    edge_file_name = open('edge_list_demo.txt', 'r')
+    edge_file_name = open('edges_list_demo.txt', 'r')
     edges_list = list()
     for any_thing in edge_file_name:
         node_num = any_thing.split()
@@ -157,12 +157,8 @@ if __name__ == '__main__':
     print(first_graph.matrix_adjacency)
 
     print('**** Bfs ****')
-    bfs_graph_list = first_graph.bts(6)
-    print(bfs_graph_list.pop_data(6)[2])
-    print(bfs_graph_list.pop_data(2)[2])
-    print(bfs_graph_list.pop_data(7)[2])
-    print(bfs_graph_list.pop_data(8)[2])
-    print(bfs_graph_list.pop_data(9)[2])
-    print(bfs_graph_list.pop_data(10)[2])
+    bfs_graph_list = first_graph.bts(int(input([' greh shro'])))
+    print(bfs_graph_list.pop_data(int(input([' greh payan'])))[2])
+
     print('***path***')
     print(bfs_graph_list.get_path(9))
